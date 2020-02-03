@@ -1,8 +1,15 @@
 import time
 import urllib.request
+import threads
+import sequentially
 from bs4 import BeautifulSoup
 
-from sequentially import download_photos
+
+DOWNLOAD_FUNCTIONS = {
+    'sequentially': sequentially.download_photos,
+    'threads': threads.download_photos
+}
+
 
 
 def fetch_website(url_address):
@@ -21,17 +28,20 @@ def take_photos_address(web_content, base_url):
     return photo_urls
 
 
-def main():
+def main(method='sequntially'):
     url_address = 'http://www.if.pw.edu.pl/~mrow/dyd/wdprir/'
     web_content = fetch_website(url_address)
     photo_urls = take_photos_address(web_content, url_address)
+
+    download_photos = DOWNLOAD_FUNCTIONS[method]
 
     start_time = time.time()
     download_photos(photo_urls)
     end_time = time.time()
     time_diff = end_time - start_time
+
     print(time_diff)
 
 
 if __name__ == '__main__':
-    main()
+    main('threads')

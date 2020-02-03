@@ -1,5 +1,7 @@
 import urllib.request
+import cv2
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from gaussian_filter import filter_photo
 
 
 def fetch_image(photo_url):
@@ -8,15 +10,17 @@ def fetch_image(photo_url):
 
 
 def save_image(photo, file_name):
-    with open(file_name, 'wb') as _file:
-        _file.write(photo)
+    blurred_photo = filter_photo(photo)
+    cv2.imwrite(file_name, blurred_photo)
 
 
 def download_photos(photo_urls):
     pool = ThreadPoolExecutor()
     photos_futures = {}
+
     for i, url in enumerate(photo_urls):
         file_name = 'photos/photo_{}.png'.format(i)
+
         fetch_future = pool.submit(fetch_image, url)
         photos_futures[fetch_future] = file_name
 

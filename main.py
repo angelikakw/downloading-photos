@@ -11,7 +11,6 @@ DOWNLOAD_FUNCTIONS = {
 }
 
 
-
 def fetch_website(url_address):
     response = urllib.request.urlopen(url_address)
     web_content = response.read()
@@ -44,4 +43,4 @@ def main(method='sequntially'):
 
 
 if __name__ == '__main__':
-    main('threads')
+    main('sequentially')
